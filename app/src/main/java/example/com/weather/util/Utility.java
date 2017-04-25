@@ -3,12 +3,15 @@ package example.com.weather.util;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.google.gson.Gson;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import example.com.weather.db.City;
 import example.com.weather.db.County;
 import example.com.weather.db.Province;
+import example.com.weather.gson.HeWeather;
 
 /**
  * Created by 14064 on 2017/4/23.
@@ -77,5 +80,20 @@ public class Utility {
             }
         }
         return false;
+    }
+
+    /*
+    处理天气数据
+     */
+    public static HeWeather handleWeatherResponse(String reponse){
+        try{
+            JSONObject jsonObject=new JSONObject(reponse);
+            JSONArray jsonArray=jsonObject.getJSONArray("HeWeather");
+            String weatherContent=jsonArray.getJSONObject(0).toString();
+            return new Gson().fromJson(weatherContent,HeWeather.class);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
     }
 }

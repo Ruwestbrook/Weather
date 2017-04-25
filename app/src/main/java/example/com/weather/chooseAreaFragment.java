@@ -2,6 +2,7 @@ package example.com.weather;
 
 import android.app.Fragment;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -69,12 +70,18 @@ public class chooseAreaFragment extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 if(currentLevel==LEVEL_PROVINCE){
                     selectedProvince=provinceList.get(i);
-                    Toast.makeText(getContext(),"点击了省份",Toast.LENGTH_SHORT).show();
                     queryCities();
+
                 }else if(currentLevel==LEVEL_CITY){
                     selectedCity=cityList.get(i);
-                    Toast.makeText(getContext(),"点击了城市",Toast.LENGTH_SHORT).show();
                     queryCounties();
+                }
+                else if(currentLevel==LEVEL_COUNTY){
+                    String cityId=countyList.get(i).getWeatherId();
+                    Intent intent=new Intent(getActivity(),WeatherActivity.class);
+                    intent.putExtra("weather_id",cityId);
+                    startActivity(intent);
+                    getActivity().finish();
                 }
             }
         });
@@ -83,11 +90,10 @@ public class chooseAreaFragment extends Fragment {
             public void onClick(View view) {
                 if(currentLevel==LEVEL_COUNTY){
                     queryCities();
-                    Toast.makeText(getContext(),"区域",Toast.LENGTH_SHORT).show();
                 }else if(currentLevel==LEVEL_CITY){
                     queryProvinces();
-                    Toast.makeText(getContext(),"城市",Toast.LENGTH_SHORT).show();
                 }
+
             }
         });
             queryProvinces();
@@ -125,7 +131,9 @@ public class chooseAreaFragment extends Fragment {
             listView.setSelection(0);
             currentLevel=LEVEL_CITY;
         }else {
+
             int provinceCode=selectedProvince.getProvinceCode();
+
             String address="http://guolin.tech/api/china/"+provinceCode;
             queryFromServer(address,"city");
         }
@@ -147,7 +155,6 @@ public class chooseAreaFragment extends Fragment {
             int cityCode=selectedCity.getCityCode();
 
             String address="http://guolin.tech/api/china/"+provinceCode+"/"+cityCode;
-                Toast.makeText(getContext(),address,Toast.LENGTH_SHORT).show();
             queryFromServer(address,"County");
         }
     }
@@ -176,7 +183,6 @@ public class chooseAreaFragment extends Fragment {
                 }else if("County".equals(type)){
 
                     result=Utility.handleCountyResponse(responseText,selectedCity.getId());
-                    Log.d("QQ","这道理哈啥"+result);
                 }
                 if(result){
                     getActivity().runOnUiThread(new Runnable() {
