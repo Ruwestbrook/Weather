@@ -85,9 +85,9 @@ public class Utility {
     /*
     处理天气数据
      */
-    public static HeWeather handleWeatherResponse(String reponse){
+    public static HeWeather handleWeatherResponse(String response){
         try{
-            JSONObject jsonObject=new JSONObject(reponse);
+            JSONObject jsonObject=new JSONObject(response);
             JSONArray jsonArray=jsonObject.getJSONArray("HeWeather");
             String weatherContent=jsonArray.getJSONObject(0).toString();
             return new Gson().fromJson(weatherContent,HeWeather.class);
