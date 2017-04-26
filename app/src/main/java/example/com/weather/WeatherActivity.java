@@ -1,5 +1,6 @@
 package example.com.weather;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
@@ -177,6 +178,8 @@ public class WeatherActivity extends AppCompatActivity {
         aqiText.setText(aqi);
         pm25Text.setText(pm25);
         weatherLayout.setVisibility(View.VISIBLE);
+        Intent intent=new Intent(this,AutoUpdateService.class);
+        startService(intent);
     }
     private void loadBasicPic(){
         String address="http://guolin.tech/api/bing_pic";
